@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATL Airport Tesla Ride Quote</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f5f5f5;color:#171717}
+  .wrap{max-width:520px;margin:0 auto;padding:24px 16px 40px}
+  .card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+  h1{font-size:26px;margin:0 0 8px}
+  .sub{color:#666;margin:0 0 24px;line-height:1.45}
+  label{display:block;font-weight:600;margin:16px 0 7px}
+  input,select{width:100%;padding:13px 14px;border:1px solid #ccc;border-radius:10px;font-size:16px;background:#fff}
+  button{width:100%;border:0;border-radius:11px;padding:15px;margin-top:22px;font-size:17px;font-weight:700;cursor:pointer}
+  .primary{background:#111;color:#fff}
+  .secondary{background:#eee;color:#111}
+  .quote{display:none;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid #eee}
+  .price{font-size:42px;font-weight:800;margin:8px 0}
+  .small{font-size:13px;color:#666}
+  .notice{font-size:13px;line-height:1.45;color:#666;margin-top:16px}
+  .error{color:#b00020;margin-top:12px;font-size:14px;display:none}
+  .summary{text-align:left;background:#f7f7f7;border-radius:12px;padding:14px;margin-top:18px;line-height:1.7}
+  .badge{display:inline-block;padding:6px 10px;border-radius:99px;background:#eee;font-size:12px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <span class="badge">ATL AIRPORT TRANSPORTATION</span>
+    <h1>Get Your Tesla Airport Ride Quote</h1>
+    <p class="sub">Enter your trip details to receive your one-way airport fare.</p>
+
+    <label for="direction">Trip direction</label>
+    <select id="direction">
+      <option value="to">To ATL Airport</option>
+      <option value="from">From ATL Airport</option>
+    </select>
+
+    <label for="pickup">Pickup address</label>
+    <input id="pickup" placeholder="Street address, city, state">
+
+    <label for="dropoff">Drop-off address</label>
+    <input id="dropoff" placeholder="Street address, city, state">
+
+    <label for="date">Date</label>
+    <input id="date" type="date">
+
+    <label for="time">Pickup time</label>
+    <input id="time" type="time">
+
+    <label for="passengers">Passengers</label>
+    <select id="passengers">
+      <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+    </select>
+
+    <label for="name">Full name</label>
+    <input id="name" placeholder="Your name">
+
+    <label for="phone">Phone</label>
+    <input id="phone" type="tel" placeholder="(404) 555-1234">
+
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="you@example.com">
+
+    <button class="primary" onclick="calculateQuote()">GET MY QUOTE</button>
+    <div id="error" class="error"></div>
+
+    <div id="quote" class="quote">
+      <div class="small">YOUR ONE-WAY AIRPORT FARE</div>
+      <div class="price" id="price">$0.00</div>
+      <div class="summary" id="summary"></div>
+      <button class="primary" onclick="bookRide()">BOOK THIS RIDE</button>
+      <button class="secondary" onclick="editRide()">EDIT TRIP</button>
+      <p class="notice">Final booking is subject to availability and applicable transportation requirements. The customer-facing page does not display the per-mile pricing formula.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  PRODUCTION NOTE:
+  Replace calculateMiles() with a server-side routing API call.
+  Do NOT put a Google Maps/Mapbox/Here API secret in this browser code.
+  The server should:
+    1. Geocode pickup/drop-off.
+    2. Verify the trip is to/from ATL Airport.
+    3. Get one-way driving distance.
+    4. Determine the service zone.
+    5. Apply the private $3/$4 rate.
+    6. Return only the final customer fare.
+*/
+
+function calculateMiles(pickup, dropoff) {
+  // DEMO ONLY. Replace with real routing API.
+  // This keeps the prototype usable without exposing an API key.
+  const text = (pickup + " " + dropoff).toLowerCase();
+  if (text.includes("sandy springs")) return 22.4;
+  if (text.includes("buckhead") || text.includes("downtown")) return 15.2;
+  return 20.0;
+}
+
+function getRate(pickup, dropoff) {
+  const text = (pickup + " " + dropoff).toLowerCase();
+  if (text.includes("sandy springs")) return 3;
+  if (text.includes("buckhead") || text.includes("downtown")) return 4;
+  return null;
+}
+
+function calculateQuote() {
+  const direction = document.getElementById("direction").value;
+  const pickup = document.getElementById("pickup").value.trim();
+  const dropoff = document.getElementById("dropoff").value.trim();
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const err = document.getElementById("error");
+
+  err.style.display = "none";
+
+  if (!pickup || !dropoff || !date || !time || !name || !phone || !email) {
+    err.textContent = "Please complete all required fields.";
+    err.style.display = "block";
+    return;
+  }
+
+  const rate = getRate(pickup, dropoff);
+  if (rate === null) {
+    err.textContent = "This prototype currently supports Sandy Springs, Buckhead, and Downtown Atlanta service areas.";
+    err.style.display = "block";
+    return;
+  }
+
+  const miles = calculateMiles(pickup, dropoff);
+  const fare = Math.max(miles * rate, 0);
+
+  document.getElementById("price").textContent = "$" + fare.toFixed(2);
+  document.getElementById("summary").innerHTML =
+    "<strong>Pickup:</strong> " + escapeHtml(pickup) + "<br>" +
+    "<strong>Destination:</strong> " + escapeHtml(dropoff) + "<br>" +
+    "<strong>Date:</strong> " + escapeHtml(date) + "<br>" +
+    "<strong>Pickup:</strong> " + escapeHtml(time) + "<br>" +
+    "<strong>Passengers:</strong> " + escapeHtml(document.getElementById("passengers").value);
+
+  sessionStorage.setItem("rideQuote", JSON.stringify({direction,pickup,dropoff,date,time,name,phone,email,fare}));
+  document.getElementById("quote").style.display = "block";
+  document.getElementById("quote").scrollIntoView({behavior:"smooth"});
+}
+
+function bookRide() {
+  alert("Booking/payment integration goes here. Connect this button to your payment processor and reservation database.");
+}
+
+function editRide() {
+  document.getElementById("quote").style.display = "none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+</script>
+</body>
+</html>
