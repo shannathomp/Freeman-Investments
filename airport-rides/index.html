@@ -79,36 +79,10 @@
 </div>
 
 <script>
-/*
-  PRODUCTION NOTE:
-  Replace calculateMiles() with a server-side routing API call.
-  Do NOT put a Google Maps/Mapbox/Here API secret in this browser code.
-  The server should:
-    1. Geocode pickup/drop-off.
-    2. Verify the trip is to/from ATL Airport.
-    3. Get one-way driving distance.
-    4. Determine the service zone.
-    5. Apply the private $3/$4 rate.
-    6. Return only the final customer fare.
-*/
+const QUOTE_API =
+  "https://airport-ride-quote-687524606204.us-east1.run.app";
 
-function calculateMiles(pickup, dropoff) {
-  // DEMO ONLY. Replace with real routing API.
-  // This keeps the prototype usable without exposing an API key.
-  const text = (pickup + " " + dropoff).toLowerCase();
-  if (text.includes("sandy springs")) return 22.4;
-  if (text.includes("buckhead") || text.includes("downtown")) return 15.2;
-  return 20.0;
-}
-
-function getRate(pickup, dropoff) {
-  const text = (pickup + " " + dropoff).toLowerCase();
-  if (text.includes("sandy springs")) return 3;
-  if (text.includes("buckhead") || text.includes("downtown")) return 4;
-  return null;
-}
-
-function calculateQuote() {
+async function calculateQuote() {
   const direction = document.getElementById("direction").value;
   const pickup = document.getElementById("pickup").value.trim();
   const dropoff = document.getElementById("dropoff").value.trim();
@@ -117,9 +91,10 @@ function calculateQuote() {
   const name = document.getElementById("name").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const email = document.getElementById("email").value.trim();
-  const err = document.getElementById("error");
 
+  const err = document.getElementById("error");
   err.style.display = "none";
+  err.textContent = "";
 
   if (!pickup || !dropoff || !date || !time || !name || !phone || !email) {
     err.textContent = "Please complete all required fields.";
@@ -127,40 +102,89 @@ function calculateQuote() {
     return;
   }
 
-  const rate = getRate(pickup, dropoff);
-  if (rate === null) {
-    err.textContent = "This prototype currently supports Sandy Springs, Buckhead, and Downtown Atlanta service areas.";
+  try {
+    const response = await fetch(QUOTE_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        destination: dropoff
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to calculate quote.");
+    }
+
+    const fare = Number(data.quote);
+
+    if (!Number.isFinite(fare)) {
+      throw new Error("The server returned an invalid fare.");
+    }
+
+    document.getElementById("price").textContent =
+      "$" + fare.toFixed(2);
+
+    document.getElementById("summary").innerHTML =
+      "<strong>Pickup:</strong> " + escapeHtml(pickup) + "<br>" +
+      "<strong>Destination:</strong> " + escapeHtml(dropoff) + "<br>" +
+      "<strong>Date:</strong> " + escapeHtml(date) + "<br>" +
+      "<strong>Pickup Time:</strong> " + escapeHtml(time) + "<br>" +
+      "<strong>Passengers:</strong> " +
+      escapeHtml(document.getElementById("passengers").value);
+
+    sessionStorage.setItem(
+      "rideQuote",
+      JSON.stringify({
+        direction,
+        pickup,
+        dropoff,
+        date,
+        time,
+        name,
+        phone,
+        email,
+        fare
+      })
+    );
+
+    document.getElementById("quote").style.display = "block";
+    document.getElementById("quote").scrollIntoView({
+      behavior: "smooth"
+    });
+
+  } catch (error) {
+    err.textContent =
+      error.message || "Unable to calculate your ride quote.";
     err.style.display = "block";
-    return;
   }
-
-  const miles = calculateMiles(pickup, dropoff);
-  const fare = Math.max(miles * rate, 0);
-
-  document.getElementById("price").textContent = "$" + fare.toFixed(2);
-  document.getElementById("summary").innerHTML =
-    "<strong>Pickup:</strong> " + escapeHtml(pickup) + "<br>" +
-    "<strong>Destination:</strong> " + escapeHtml(dropoff) + "<br>" +
-    "<strong>Date:</strong> " + escapeHtml(date) + "<br>" +
-    "<strong>Pickup:</strong> " + escapeHtml(time) + "<br>" +
-    "<strong>Passengers:</strong> " + escapeHtml(document.getElementById("passengers").value);
-
-  sessionStorage.setItem("rideQuote", JSON.stringify({direction,pickup,dropoff,date,time,name,phone,email,fare}));
-  document.getElementById("quote").style.display = "block";
-  document.getElementById("quote").scrollIntoView({behavior:"smooth"});
 }
 
 function bookRide() {
-  alert("Booking/payment integration goes here. Connect this button to your payment processor and reservation database.");
+  alert(
+    "Booking/payment integration goes here. Connect this button to your payment processor and reservation database."
+  );
 }
 
 function editRide() {
   document.getElementById("quote").style.display = "none";
-  window.scrollTo({top:0,behavior:"smooth"});
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  return String(s).replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[m]));
 }
 </script>
 </body>
