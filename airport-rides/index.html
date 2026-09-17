@@ -113,7 +113,8 @@ async function calculateQuote() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        destination: `${dropoff}, ${city}, GA ${zip}`
+        destination: `${dropoff}, ${city}, GA ${zip}`,
+       zip:  zip
       })
     });
 
