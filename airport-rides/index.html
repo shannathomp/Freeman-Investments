@@ -38,11 +38,13 @@
       <option value="from">From ATL Airport</option>
     </select>
 
-    <label for="pickup">Pickup address</label>
-    <input id="pickup" placeholder="Street address, city, state">
+    <label for="dropoff">Georgia Street Address</label>
+<input id="dropoff" type="text" placeholder="123 Main Street" required>
+   <label for="city">City</label>
+<input id="city" type="text" placeholder="Atlanta" required>
 
-    <label for="dropoff">Drop-off address</label>
-    <input id="dropoff" placeholder="Street address, city, state">
+<label for="zip">ZIP Code</label>
+<input id="zip" type="text" inputmode="numeric" maxlength="5" placeholder="30339" required>
 
     <label for="date">Date</label>
     <input id="date" type="date">
@@ -84,8 +86,10 @@ const QUOTE_API =
 
 async function calculateQuote() {
   const direction = document.getElementById("direction").value;
-  const pickup = document.getElementById("pickup").value.trim();
+
   const dropoff = document.getElementById("dropoff").value.trim();
+  const city = document.getElementById("city").value.trim();
+  const zip = document.getElementById("zip").value.trim();
   const date = document.getElementById("date").value;
   const time = document.getElementById("time").value;
   const name = document.getElementById("name").value.trim();
@@ -96,7 +100,7 @@ async function calculateQuote() {
   err.style.display = "none";
   err.textContent = "";
 
-  if (!pickup || !dropoff || !date || !time || !name || !phone || !email) {
+  if (!dropoff ||!city||!zip|| !date || !time || !name || !phone || !email) {
     err.textContent = "Please complete all required fields.";
     err.style.display = "block";
     return;
@@ -109,7 +113,7 @@ async function calculateQuote() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        destination: dropoff
+        destination: `${dropoff}, ${city}, GA ${zip}`
       })
     });
 
@@ -129,8 +133,8 @@ async function calculateQuote() {
       "$" + fare.toFixed(2);
 
     document.getElementById("summary").innerHTML =
-      "<strong>Pickup:</strong> " + escapeHtml(pickup) + "<br>" +
-      "<strong>Destination:</strong> " + escapeHtml(dropoff) + "<br>" +
+      "<strong>Georgia Address:</strong> " + escapeHtml(dropoff + "," +city + ", GA " +zip) + "<br>" +
+    
       "<strong>Date:</strong> " + escapeHtml(date) + "<br>" +
       "<strong>Pickup Time:</strong> " + escapeHtml(time) + "<br>" +
       "<strong>Passengers:</strong> " +
@@ -140,7 +144,8 @@ async function calculateQuote() {
       "rideQuote",
       JSON.stringify({
         direction,
-        pickup,
+        city,
+        zip,
         dropoff,
         date,
         time,
