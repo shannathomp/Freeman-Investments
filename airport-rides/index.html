@@ -39,7 +39,8 @@
     </select>
 
     <label for="dropoff">Georgia Street Address</label>
-<input id="dropoff" type="text" placeholder="123 Main Street" required>
+<div id="autocomplete-container"></div>
+<input id="dropoff" type="hidden" required>
    <label for="city">City</label>
 <input id="city" type="text" placeholder="Atlanta" required>
 
@@ -192,6 +193,80 @@ function escapeHtml(s) {
     "'": "&#039;"
   }[m]));
 }
+</script>
+ <script>
+async function initAddressAutocomplete() {
+  const { PlaceAutocompleteElement } =
+    await google.maps.importLibrary("places");
+
+  const autocomplete = new PlaceAutocompleteElement({
+    includedRegionCodes: ["us"]
+  });
+
+  autocomplete.placeholder = "Start typing Georgia street address";
+  autocomplete.style.width = "100%";
+
+  document
+    .getElementById("autocomplete-container")
+    .appendChild(autocomplete);
+
+  autocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
+    const place = placePrediction.toPlace();
+
+    await place.fetchFields({
+      fields: ["formattedAddress", "addressComponents"]
+    });
+
+    let streetNumber = "";
+    let streetName = "";
+    let city = "";
+    let state = "";
+    let zip = "";
+
+    for (const component of place.addressComponents || []) {
+      const types = component.types;
+
+      if (types.includes("street_number")) {
+        streetNumber = component.longText;
+      }
+
+      if (types.includes("route")) {
+        streetName = component.longText;
+      }
+
+      if (types.includes("locality")) {
+        city = component.longText;
+      }
+
+      if (!city && types.includes("postal_town")) {
+        city = component.longText;
+      }
+
+      if (types.includes("administrative_area_level_1")) {
+        state = component.shortText;
+      }
+
+      if (types.includes("postal_code")) {
+        zip = component.longText;
+      }
+    }
+
+    if (state !== "GA") {
+      alert("Please select a Georgia address.");
+      return;
+    }
+
+    document.getElementById("dropoff").value =
+      `${streetNumber} ${streetName}`.trim();
+
+    document.getElementById("city").value = city;
+    document.getElementById("zip").value = zip;
+  });
+}
+</script>
+ <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCucCKNK6xM39URZ3Xh7e--1fNmNfA93Qw&loading=async&callback=initAddressAutocomplete"
+  async>
 </script>
 </body>
 </html>
