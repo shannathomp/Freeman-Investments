@@ -84,7 +84,7 @@
 <script>
 const QUOTE_API =
   "https://airport-ride-quote-687524606204.us-east1.run.app";
-
+let currentFare = 0;
 async function calculateQuote() {
   const direction = document.getElementById("direction").value;
 
@@ -127,6 +127,7 @@ async function calculateQuote() {
       sessionStorage.setItem("rideQuote",JSON.stringify(data));
 
     const fare = Number(data.quote);
+   currentFare = fare;
 
     if (!Number.isFinite(fare)) {
       throw new Error("The server returned an invalid fare.");
@@ -173,9 +174,7 @@ async function calculateQuote() {
 
 async function bookRide() {
   try {
-   const amount = Number(
-  document.getElementById("price").textContent.replace("$", "")
-);
+   const amount = currentFare;
 
 if (!Number.isFinite(amount) || amount <= 0) {
   alert("Your ride quote could not be found. Please get a new quote.");
