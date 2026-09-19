@@ -228,16 +228,53 @@ function escapeHtml(s) {
   }[m]));
 }
 </script>
- <script>
-const paymentStatus = new URLSearchParams(window.location.search).get("payment");
+<script>
+async function verifyStripePayment() {
+  const params = new URLSearchParams(window.location.search);
+  const paymentStatus = params.get("payment");
+  const sessionId = params.get("session_id");
 
-if (paymentStatus === "success") {
-  alert("Payment successful! Your Freeman Airport Ride has been booked. Thank you!");
+  if (paymentStatus === "cancelled") {
+    alert("Payment was cancelled. Your card was not charged.");
+    return;
+  }
+
+  if (paymentStatus !== "success") {
+    return;
+  }
+
+  if (!sessionId) {
+    alert("Payment could not be verified.");
+    return;
+  }
+
+  try {
+    const response = await fetch(QUOTE_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        action: "verify-payment",
+        sessionId: sessionId
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.paid === true) {
+      alert("Payment successful! Your Freeman Airport Ride has been booked. Thank you!");
+    } else {
+      alert("Payment could not be verified.");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Unable to verify payment. Please contact Freeman Airport Rides.");
+  }
 }
 
-if (paymentStatus === "cancelled") {
-  alert("Payment was cancelled. Your card was not charged.");
-}
+verifyStripePayment();
 </script>
  <script>
 async function initAddressAutocomplete() {
