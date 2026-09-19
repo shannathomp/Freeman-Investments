@@ -275,9 +275,22 @@ async function verifyStripePayment() {
 
     const data = await response.json();
 
-    if (response.ok && data.paid === true) {
-      alert("Payment successful! Your Freeman Airport Ride has been booked. Thank you!");
-    } else {
+  if (response.ok && data.paid === true) {
+  alert("Payment successful! Your Freeman Airport Ride has been booked. Thank you!");
+
+  // Clear old ride information
+  sessionStorage.removeItem("rideQuote");
+
+  // Remove payment information from the URL
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
+
+  // Return to a clean booking page
+  window.location.reload();
+} else {
       alert("Payment could not be verified.");
     }
 
