@@ -170,10 +170,42 @@ async function calculateQuote() {
   }
 }
 
-function bookRide() {
-  alert(
-    "Booking/payment integration goes here. Connect this button to your payment processor and reservation database."
-  );
+async function bookRide() {
+  try {
+    const rideQuote = JSON.parse(sessionStorage.getItem("rideQuote"));
+
+    if (!rideQuote || !rideQuote.quote) {
+      alert("Your ride quote could not be found. Please get a new quote.");
+      return;
+    }
+
+    const response = await fetch(QUOTE_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        action: "checkout",
+        amount: rideQuote.quote
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to start payment.");
+    }
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error("Stripe checkout URL was not returned.");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "Unable to start payment.");
+  }
 }
 
 function editRide() {
