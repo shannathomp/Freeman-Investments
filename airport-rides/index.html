@@ -247,10 +247,20 @@ async function verifyStripePayment() {
   const paymentStatus = params.get("payment");
   const sessionId = params.get("session_id");
 
-  if (paymentStatus === "cancelled") {
-    alert("Payment was cancelled. Your card was not charged.");
-    return;
-  }
+if (paymentStatus === "cancelled") {
+  alert("Payment was cancelled. Your card was not charged.");
+
+  sessionStorage.removeItem("rideQuote");
+
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
+
+  window.location.reload();
+  return;
+}
 
   if (paymentStatus !== "success") {
     return;
