@@ -173,12 +173,14 @@ async function calculateQuote() {
 
 async function bookRide() {
   try {
-    const rideQuote = JSON.parse(sessionStorage.getItem("rideQuote"));
+   const amount = Number(
+  document.getElementById("price").textContent.replace("$", "")
+);
 
-    if (!rideQuote || !rideQuote.quote) {
-      alert("Your ride quote could not be found. Please get a new quote.");
-      return;
-    }
+if (!Number.isFinite(amount) || amount <= 0) {
+  alert("Your ride quote could not be found. Please get a new quote.");
+  return;
+}
 
     const response = await fetch(QUOTE_API, {
       method: "POST",
@@ -187,7 +189,7 @@ async function bookRide() {
       },
       body: JSON.stringify({
         action: "checkout",
-        amount: rideQuote.quote
+        amount: amount
       })
     });
 
