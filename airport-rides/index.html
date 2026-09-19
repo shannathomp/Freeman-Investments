@@ -186,13 +186,23 @@ if (!Number.isFinite(amount) || amount <= 0) {
       headers: {
         "Content-Type": "application/json"
       },
-     body: JSON.stringify({
+    body: JSON.stringify({
   action: "checkout",
+
   destination:
     document.getElementById("dropoff").value.trim() + ", " +
     document.getElementById("city").value.trim() + ", GA " +
     document.getElementById("zip").value.trim(),
-  zip: document.getElementById("zip").value.trim()
+
+  zip: document.getElementById("zip").value.trim(),
+
+  direction: document.getElementById("direction").value,
+  date: document.getElementById("date").value,
+  time: document.getElementById("time").value,
+  passengers: document.getElementById("passengers").value,
+  name: document.getElementById("name").value.trim(),
+  phone: document.getElementById("phone").value.trim(),
+  email: document.getElementById("email").value.trim()
 })
 });
     const data = await response.json();
