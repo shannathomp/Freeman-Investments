@@ -229,6 +229,17 @@ function escapeHtml(s) {
 }
 </script>
  <script>
+const paymentStatus = new URLSearchParams(window.location.search).get("payment");
+
+if (paymentStatus === "success") {
+  alert("Payment successful! Your Freeman Airport Ride has been booked. Thank you!");
+}
+
+if (paymentStatus === "cancelled") {
+  alert("Payment was cancelled. Your card was not charged.");
+}
+</script>
+ <script>
 async function initAddressAutocomplete() {
   const { PlaceAutocompleteElement } =
     await google.maps.importLibrary("places");
