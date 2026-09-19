@@ -124,6 +124,7 @@ async function calculateQuote() {
     if (!response.ok) {
       throw new Error(data.error || "Unable to calculate quote.");
     }
+      sessionStorage.setItem("rideQuote",JSON.stringify(data));
 
     const fare = Number(data.quote);
 
