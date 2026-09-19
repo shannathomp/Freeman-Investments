@@ -76,6 +76,7 @@
       <div class="summary" id="summary"></div>
       <button class="primary" onclick="bookRide()">BOOK THIS RIDE</button>
       <button class="secondary" onclick="editRide()">EDIT TRIP</button>
+     <button class="secondary" onclick="startOver()">START OVER</button>
       <p class="notice">Final booking is subject to availability and applicable transportation requirements. The customer-facing page does not display the per-mile pricing formula.</p>
     </div>
   </div>
@@ -229,6 +230,17 @@ function editRide() {
     top: 0,
     behavior: "smooth"
   });
+}
+ function startOver() {
+  sessionStorage.removeItem("rideQuote");
+
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
+
+  window.location.reload();
 }
 
 function escapeHtml(s) {
