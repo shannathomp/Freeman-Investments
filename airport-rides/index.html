@@ -186,12 +186,15 @@ if (!Number.isFinite(amount) || amount <= 0) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        action: "checkout",
-        amount: amount
-      })
-    });
-
+     body: JSON.stringify({
+  action: "checkout",
+  destination:
+    document.getElementById("dropoff").value.trim() + ", " +
+    document.getElementById("city").value.trim() + ", GA " +
+    document.getElementById("zip").value.trim(),
+  zip: document.getElementById("zip").value.trim()
+})
+});
     const data = await response.json();
 
     if (!response.ok) {
