@@ -52,7 +52,7 @@
     <input id="date" type="date">
 
     <label for="time">Pickup time</label>
-    <input id="time" type="time">
+    <input id="time" type="time" required>
 
     <label for="passengers">Passengers</label>
     <select id="passengers">
@@ -95,13 +95,20 @@ async function calculateQuote() {
   const zip = document.getElementById("zip").value.trim();
   const date = document.getElementById("date").value;
   const time = document.getElementById("time").value;
+  const err = document.getElementById("error");
+  err.style.display = "none";
+  err.textContent = "";
+
+if (time && (time < "04:00" || time > "17:00")) {
+  err.textContent =
+    "Time unavailable. Please select a time between 4:00 AM and 5:00 PM.";
+  err.style.display = "block";
+  return;
+}
   const name = document.getElementById("name").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const email = document.getElementById("email").value.trim();
 
-  const err = document.getElementById("error");
-  err.style.display = "none";
-  err.textContent = "";
 
   if (!dropoff ||!city||!zip|| !date || !time || !name || !phone || !email) {
     err.textContent = "Please complete all required fields.";
