@@ -437,6 +437,9 @@ if (paymentStatus === "cancelled") {
     const data = await response.json();
 
   if (response.ok && data.paid === true) {
+    if (typeof fbq === "function") {
+      fbq("track", "Purchase");
+    }
   alert("Payment successful! Your Freeman Airport Ride has been booked. Thank you!");
 
   // Clear old ride information
