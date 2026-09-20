@@ -76,7 +76,29 @@
   style="margin-top: 14px; width: 100%;">
   I'M JUST HERE TO TIP MY DRIVER
 </button>
+<div id="tipOptions" style="display:none; margin-top:12px; text-align:center;">
+  <p><strong>Select a tip amount</strong></p>
 
+  <button type="button" onclick="selectTip(5)">$5</button>
+  <button type="button" onclick="selectTip(10)">$10</button>
+  <button type="button" onclick="selectTip(15)">$15</button>
+  <button type="button" onclick="selectTip(20)">$20</button>
+
+  <div style="margin-top:12px;">
+    <input
+      id="customTip"
+      type="number"
+      min="1"
+      step="1"
+      placeholder="Custom tip amount"
+      style="width:160px; padding:10px;"
+    >
+
+    <button type="button" onclick="selectCustomTip()">
+      CUSTOM TIP
+    </button>
+  </div>
+</div>
 <div id="tipOptions" style="display:none; margin-top:12px; text-align:center;">
   <p><strong>Select a tip amount</strong></p>
 
@@ -103,6 +125,59 @@
 const QUOTE_API =
   "https://airport-ride-quote-687524606204.us-east1.run.app";
 let currentFare = 0;
+function showTipOptions() {
+  const tipOptions = document.getElementById("tipOptions");
+
+  if (tipOptions.style.display === "none") {
+    tipOptions.style.display = "block";
+  } else {
+    tipOptions.style.display = "none";
+  }
+}
+
+function selectTip(amount) {
+  startTipPayment(amount);
+}
+
+function selectCustomTip() {
+  const amount = Number(document.getElementById("customTip").value);
+
+  if (!amount || amount < 1) {
+    alert("Please enter a valid tip amount.");
+    return;
+  }
+
+  startTipPayment(amount);
+}async function startTipPayment(amount) {
+  try {
+    const response = await fetch(QUOTE_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        action: "tip-checkout",
+        tipAmount: amount
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to start tip payment.");
+    }
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Unable to open tip payment.");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Unable to process the tip. Please try again.");
+  }
+}
 async function calculateQuote() {
   const direction = document.getElementById("direction").value;
 
