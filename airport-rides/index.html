@@ -69,6 +69,22 @@
     <input id="email" type="email" placeholder="you@example.com">
 
     <button class="primary" onclick="calculateQuote()">GET MY QUOTE</button>
+   <button
+  type="button"
+  class="secondary"
+  onclick="showTipOptions()"
+  style="margin-top: 14px; width: 100%;">
+  I'M JUST HERE TO TIP MY DRIVER
+</button>
+
+<div id="tipOptions" style="display:none; margin-top:12px; text-align:center;">
+  <p><strong>Select a tip amount</strong></p>
+
+  <button type="button" onclick="selectTip(5)">$5</button>
+  <button type="button" onclick="selectTip(10)">$10</button>
+  <button type="button" onclick="selectTip(15)">$15</button>
+  <button type="button" onclick="selectTip(20)">$20</button>
+</div>
     <div id="error" class="error"></div>
 
     <div id="quote" class="quote">
