@@ -29,6 +29,13 @@
 <div class="wrap">
   <div class="card">
     <span class="badge">TESLA ATL AIRPORT TRANSPORTATION</span>
+   <div id="tipSuccessMessage"
+     style="display:none; background:#eaf8ee; border:1px solid #28a745;
+            padding:16px; margin-bottom:20px; border-radius:10px;
+            text-align:center;">
+  <strong>Thank you for your tip! ❤️</strong><br>
+  Your payment was successful. We appreciate you choosing Freeman Airport Rides.
+</div>
     <h1>Get Your Tesla Airport Ride Quote</h1>
     <p class="sub">Enter your trip details to receive your one-way airport fare.</p>
    <p class="sub">All rides will be in a TESLA. Driver's: Name, Plate number, Car color will be furnished to customer at least 2-hours before pickup to ensure safety.</p>
@@ -125,6 +132,21 @@
 const QUOTE_API =
   "https://airport-ride-quote-687524606204.us-east1.run.app";
 let currentFare = 0;
+ const pageParams = new URLSearchParams(window.location.search);
+
+if (pageParams.get("tip") === "success") {
+  const tipMessage = document.getElementById("tipSuccessMessage");
+
+  if (tipMessage) {
+    tipMessage.style.display = "block";
+  }
+
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
+}
 function showTipOptions() {
   const tipOptions = document.getElementById("tipOptions");
 
