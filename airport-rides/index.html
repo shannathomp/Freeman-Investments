@@ -504,8 +504,21 @@ if (time && (time < "04:00" || time > "17:00")) {
       throw new Error("The server returned an invalid fare.");
     }
 
-    document.getElementById("price").textContent =
-      "$" + fare.toFixed(2);
+   const originalFare = fare * 2;
+const discountAmount = originalFare - fare;
+
+document.getElementById("price").innerHTML =
+  '<div style="font-size:18px; font-weight:400; margin-bottom:6px;">' +
+    'Regular Fare: <span style="text-decoration:line-through;">$' +
+    originalFare.toFixed(2) +
+    '</span>' +
+  '</div>' +
+  '<div style="font-size:18px; font-weight:600; margin-bottom:6px;">' +
+    '50% OFF: -$' + discountAmount.toFixed(2) +
+  '</div>' +
+  '<div style="font-size:42px; font-weight:800;">' +
+    'Your Price: $' + fare.toFixed(2) +
+  '</div>';
 
     document.getElementById("summary").innerHTML =
       "<strong>Georgia Address:</strong> " + escapeHtml(dropoff + "," +city + ", GA " +zip) + "<br>" +
