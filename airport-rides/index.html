@@ -252,28 +252,26 @@
     -->
 
 
-    <div class="video-placeholder">
-      🎥 Your Freeman Airport Rides video will appear here.
-    </div>
 
 
-    <!--
+  
 
     <video
       class="ride-video"
       controls
       playsinline
+      muted
       preload="metadata">
 
       <source
-        src="airport-ride.mp4"
+        src="Freeman_Airport_Rides_CC_V2.mp4"
         type="video/mp4">
 
       Your browser does not support video playback.
 
     </video>
 
-    -->
+    
 
 
     <div class="video-bottom-cta">
@@ -783,6 +781,24 @@ async function initAddressAutocomplete() {
  <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBMCqoVWjDwR45ZZtOW4jg6tA5nmqZ_K8&loading=async&callback=initAddressAutocomplete"
   async>
+</script>
+
+  <script>
+const rideVideo = document.querySelector(".ride-video");
+
+if (rideVideo) {
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        rideVideo.play().catch(() => {});
+      } else {
+        rideVideo.pause();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  videoObserver.observe(rideVideo);
+}
 </script>
 </body>
 </html>
