@@ -518,12 +518,15 @@ document.getElementById("price").innerHTML =
   '<div style="font-size:42px; font-weight:800;">' +
     'Your Price: $' + fare.toFixed(2) +
   '</div>';
-
+const [hour, minute] = time.split(":");
+const hourNumber = Number(hour);
+const formattedTime =
+  `${hourNumber % 12 || 12}:${minute} ${hourNumber >= 12 ? "PM" : "AM"}`;
     document.getElementById("summary").innerHTML =
       "<strong>Georgia Address:</strong> " + escapeHtml(dropoff + "," +city + ", GA " +zip) + "<br>" +
     
       "<strong>Date:</strong> " + escapeHtml(date) + "<br>" +
-      "<strong>Pickup Time:</strong> " + escapeHtml(time) + "<br>" +
+      "<strong>Pickup Time:</strong> " + escapeHtml(formattedTime) + "<br>" +
       "<strong>Passengers:</strong> " +
       escapeHtml(document.getElementById("passengers").value);
 
