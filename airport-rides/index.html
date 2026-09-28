@@ -791,6 +791,7 @@ if (rideVideo) {
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
+        rideVideo.muted = true;
         rideVideo.play().catch(() => {});
       } else {
         rideVideo.pause();
