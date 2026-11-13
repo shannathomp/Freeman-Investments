@@ -569,5 +569,78 @@ if (rideVideo) {
   videoObserver.observe(rideVideo);
 }
 </script>
+  
+<!-- Rotating customer notifications -->
+<style>
+#booking-popup {
+  position: fixed;
+  bottom: 22px;
+  left: 16px;
+  width: min(330px, calc(100% - 32px));
+  padding: 16px;
+  background: #fff;
+  color: #222;
+  border-left: 4px solid #c9a34a;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.2);
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+  display: none;
+  box-sizing: border-box;
+}
+#booking-popup strong {
+  display: block;
+  margin-bottom: 6px;
+}
+#booking-popup p {
+  margin: 0;
+  font-size: 14px;
+}
+</style>
+
+<div id="booking-popup" role="status" aria-live="off">
+  <strong>🚘 Freeman Airport Rides</strong>
+  <p id="booking-popup-text"></p>
+</div>
+
+<script>
+// ENTER YOUR OWN NAMES HERE
+// Use only genuine bookings with permission to display names.
+const recentBookings = [
+  "Chris F.",
+  "Kel F.",
+  "Sheneita T.",
+  "Pat W."
+];
+
+let bookingIndex = 0;
+const popup = document.getElementById("booking-popup");
+const popupText = document.getElementById("booking-popup-text");
+
+function showBooking() {
+  if (!recentBookings.length) return;
+
+  popupText.textContent =
+    recentBookings[bookingIndex] +
+    " booked a private airport ride!";
+
+  popup.style.display = "block";
+
+  setTimeout(() => {
+    popup.style.display = "none";
+  }, 5000);
+
+  bookingIndex =
+    (bookingIndex + 1) % recentBookings.length;
+}
+
+if (recentBookings.length) {
+  setTimeout(() => {
+    showBooking();
+    setInterval(showBooking, 12000);
+  }, 6000);
+}
+</script>
+
 </body>
 </html>
