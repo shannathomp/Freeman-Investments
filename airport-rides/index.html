@@ -47,6 +47,188 @@
 </style>
 </head>
 <body>
+  
+<style>
+.freeman-hero {
+  background: #000;
+  color: #fff;
+  padding: 24px 14px 32px;
+  font-family: Arial, sans-serif;
+}
+
+.freeman-hero * {
+  box-sizing: border-box;
+}
+
+.freeman-hero-card {
+  background: #242424;
+  border-radius: 22px;
+  padding: 28px 18px 18px;
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+}
+
+.freeman-brand {
+  color: #aaa;
+  font-size: clamp(14px, 2.5vw, 20px);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.freeman-hero h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  line-height: 1.2;
+  margin: 24px 0;
+  color: #fff;
+}
+
+.freeman-subtitle {
+  font-size: clamp(17px, 3vw, 26px);
+  line-height: 1.4;
+  margin: 0 0 24px;
+}
+
+.freeman-reserve-card {
+  background: #000;
+  border-radius: 18px;
+  padding: 24px 12px;
+  margin-bottom: 14px;
+}
+
+.freeman-reserve-icon {
+  font-size: 32px;
+}
+
+.freeman-reserve-card h2 {
+  color: #fff;
+  font-size: clamp(23px, 4vw, 34px);
+  margin: 12px 0;
+}
+
+.freeman-reserve-card p {
+  color: #aaa;
+  font-size: clamp(15px, 2.8vw, 21px);
+  margin: 0;
+}
+
+.freeman-hero-button {
+  width: 100%;
+  padding: 22px 12px;
+  background: #303030;
+  border: 0;
+  border-radius: 16px;
+  color: white;
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.freeman-hero-button:hover {
+  background: #444;
+}
+
+.freeman-stripe {
+  color: #aaa;
+  margin: 16px 0 0;
+  font-size: 16px;
+}
+
+.freeman-benefits {
+  max-width: 1100px;
+  margin: 24px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+
+.freeman-benefit {
+  font-weight: 700;
+  font-size: clamp(12px, 2.5vw, 20px);
+}
+
+.freeman-benefit span {
+  display: block;
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+
+@media(max-width: 380px) {
+  .freeman-hero-card {
+    padding: 22px 12px 16px;
+  }
+}
+</style>
+
+<section class="freeman-hero">
+  <div class="freeman-hero-card">
+
+    <div class="freeman-brand">
+      FREEMAN AIRPORT RIDES
+    </div>
+
+    <h1>
+      Skip the Ride Uncertainty.
+      Arrive in Comfort.
+    </h1>
+
+    <p class="freeman-subtitle">
+      Private Tesla transportation to and from
+      Atlanta Airport.
+    </p>
+
+    <div class="freeman-reserve-card">
+      <div class="freeman-reserve-icon">▣</div>
+      <h2>Reserve Your Airport Ride</h2>
+      <p>
+        Choose pickup, destination, date and time
+      </p>
+    </div>
+
+    <button class="freeman-hero-button"
+            type="button"
+            onclick="freemanScrollToForm()">
+      Get Your Fare &amp; Book
+    </button>
+
+    <p class="freeman-stripe">
+      Secure checkout powered by Stripe
+    </p>
+
+  </div>
+
+  <div class="freeman-benefits">
+    <div class="freeman-benefit">
+      <span>🚘</span>
+      Private Tesla
+    </div>
+    <div class="freeman-benefit">
+      <span>✨</span>
+      Clean &amp; Comfortable
+    </div>
+    <div class="freeman-benefit">
+      <span>📅</span>
+      Advance Booking
+    </div>
+  </div>
+</section>
+
+<script>
+function freemanScrollToForm() {
+  const dateInput = document.getElementById("date");
+
+  if (!dateInput) return;
+
+  const form = dateInput.closest("form");
+
+  (form || dateInput).scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+</script>
+
 <div class="wrap">
   <div class="card">
   
@@ -722,11 +904,6 @@ if (recentBookings.length) {
 </style>
 
 <section id="freeman-booking-enhancements">
-  <h2>Reserve Your Airport Ride</h2>
-  <p>
-    Private Tesla transportation to and from
-    Hartsfield-Jackson Atlanta International Airport.
-  </p>
 
   <button class="freeman-book-btn"
           type="button"
