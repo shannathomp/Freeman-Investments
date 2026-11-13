@@ -59,7 +59,7 @@
 </div>
 
     <header class="booking-intro" style="text-align:center;margin:8px 0 20px">
-      <div class="badge">PRIVATE TESLA ATL AIRPORT RIDES</div>
+      <div class="badge">Skip the Ride Uncertainty. Arrive in Comfort.</div>
       <h1 style="margin-top:14px">Your Private Tesla Ride to ATL Airport</h1>
       <p class="sub" style="margin-bottom:10px">Clean, private, comfortable airport transportation. Schedule your pickup and see your fare before booking.</p>
       <p class="small"><strong>No payment required to view your price.</strong></p>
@@ -641,6 +641,151 @@ if (recentBookings.length) {
   }, 2000);
 }
 </script>
+  
+<!-- Freeman Airport Rides booking enhancements -->
+<style>
+#freeman-booking-enhancements {
+  max-width: 850px;
+  margin: 32px auto;
+  padding: 24px 16px 90px;
+  text-align: center;
+  font-family: inherit;
+}
+
+#freeman-booking-enhancements h2 {
+  margin-bottom: 12px;
+}
+
+.freeman-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.freeman-step {
+  padding: 18px 10px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+.freeman-step-number {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.freeman-book-btn {
+  background: #c9a34a;
+  color: #111;
+  border: none;
+  border-radius: 10px;
+  padding: 15px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#freeman-sticky-booking {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -3px 15px rgba(0,0,0,.15);
+  z-index: 9000;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#freeman-sticky-booking button {
+  width: min(100%, 500px);
+}
+
+@media (max-width: 600px) {
+  .freeman-steps {
+    grid-template-columns: 1fr;
+  }
+  #booking-popup {
+    bottom: 85px !important;
+  }
+}
+</style>
+
+<section id="freeman-booking-enhancements">
+  <h2>Reserve Your Airport Ride</h2>
+  <p>
+    Private Tesla transportation to and from
+    Hartsfield-Jackson Atlanta International Airport.
+  </p>
+
+  <button class="freeman-book-btn"
+          type="button"
+          onclick="freemanGoToBooking()">
+    Get Your Fare &amp; Book
+  </button>
+
+  <h2 style="margin-top:40px">How Booking Works</h2>
+
+  <div class="freeman-steps">
+    <div class="freeman-step">
+      <div class="freeman-step-number">1</div>
+      <h3>Enter Your Trip</h3>
+      <p>Choose your pickup, destination, date and time.</p>
+    </div>
+
+    <div class="freeman-step">
+      <div class="freeman-step-number">2</div>
+      <h3>See Your Fare</h3>
+      <p>Review your airport transportation price.</p>
+    </div>
+
+    <div class="freeman-step">
+      <div class="freeman-step-number">3</div>
+      <h3>Confirm &amp; Pay</h3>
+      <p>Complete your reservation through secure checkout.</p>
+    </div>
+  </div>
+</section>
+
+<div id="freeman-sticky-booking">
+  <button class="freeman-book-btn"
+          type="button"
+          onclick="freemanGoToBooking()">
+    🚘 Book Your Airport Ride
+  </button>
+</div>
+
+<script>
+function freemanGoToBooking() {
+  // Uses the existing booking form's date input
+  // as an anchor. Does not alter checkout logic.
+  const bookingDate = document.getElementById("date");
+
+  if (!bookingDate) {
+    alert("Booking form could not be located.");
+    return;
+  }
+
+  const form = bookingDate.closest("form");
+  const target = form || bookingDate;
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+</script>
+
 
 </body>
 </html>
