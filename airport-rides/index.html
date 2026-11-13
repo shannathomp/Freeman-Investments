@@ -628,7 +628,7 @@ function showBooking() {
 
   setTimeout(() => {
     popup.style.display = "none";
-  }, 5000);
+  }, 4000);
 
   bookingIndex =
     (bookingIndex + 1) % recentBookings.length;
@@ -637,8 +637,8 @@ function showBooking() {
 if (recentBookings.length) {
   setTimeout(() => {
     showBooking();
-    setInterval(showBooking, 12000);
-  }, 6000);
+    setInterval(showBooking, 5000);
+  }, 2000);
 }
 </script>
 
