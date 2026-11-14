@@ -788,6 +788,9 @@ async function initAddressAutocomplete() {
 
     document.getElementById("city").value = city;
     document.getElementById("zip").value = zip;
+    if (typeof fbq === "function") {
+  fbq("trackCustom", "AddressSelected");
+}
   });
 }
 </script>
